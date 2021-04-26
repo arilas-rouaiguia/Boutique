@@ -1,0 +1,36 @@
+
+.sidebar{
+	background-color:grey;
+	margin-top:20px;
+	float:right;
+	width:350px;
+	height:300px;
+	margin-right:50px;
+}
+
+.sidebar h4{
+color:white;
+text-align:center;
+}
+
+.menu li{
+	
+	Display:inline;
+	
+}
+
+.menu li a{
+	
+	padding:13px 80px;
+	background-color:grey;
+}
+
+.footer{
+	background-color :grey;
+}
+
+.footer h5{
+	color:white;
+	padding:30px 40px;
+}
+
