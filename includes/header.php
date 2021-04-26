@@ -10,7 +10,7 @@
 		<li><a href="index.php">Accueil</a></li>
 		<li><a href="inscription.php">Inscription</a></li>
 		<li><a href="connexion.php">Connexion</a></li>
-		<li><a href="index.php">Boutique</a></li>
+		<li><a href="boutique.php">Boutique</a></li>
 		<?php if(!empty($_SESSION)){ echo ('<li><a class="lien" href="profil.php">Profil</a></li> <li><a class="lien" href="deconnexion.php">Deconnexion</a></li>');} //Uniquement affiché si connecté ?>
 </header>
 </body>
