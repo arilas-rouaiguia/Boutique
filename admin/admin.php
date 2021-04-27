@@ -14,6 +14,51 @@ if(isset($_GET['action'])){
 		$titre = $_POST['titre'];
 		$description = $_POST['description'];
 		$prix = $_POST['prix'];
+		$img = $_FILES['img']['name'];
+		
+		$img_tmp = $_FILES['img']['tmp_name'];
+		
+		if(!empty($img_tmp)){
+			$image = explode('.',$img);
+			
+			$image_ext = end($image);
+			
+			if(in_array(strtolower($image_ext),array('png','jpg','jpeg'))==false){
+				echo'Format Invalide (PNG, JPG ou JPEG)';
+			}else{
+				$image_size = getimagesize($img_tmp);
+				
+				if($image_size['mime']=='image/jpeg'){
+					
+					$image_src = imagecreatefromjpeg($img_tmp);
+				}else if($image_size['mime']=='image/png'){
+					
+					$image_src = imagecreatefrompng($img_tmp);
+				}else{
+					$image_src = false;
+					echo 'Veuillez rentrer une image Valide.';	
+				}
+				if($image_src!==false){
+				 $image_width=200;
+				 
+				 if($image_size[0]==$image_width){
+					 $image_finale = $image_src;
+				 }else{
+					 $new_width[0]=$image_width;
+					 
+					 $new_height[1] = 200;
+					 
+					 $image_finale = imagecreatetruecolor($new_width[0],$new_height[1]);
+					 
+					 imagecopyresampled($image_finale,$image_src,0,0,0,0,$new_width[0],$new_height[1],$image_size[0],$image_size[1]);
+				 }
+				 imagejpeg($image_finale,'imgs/'.$titre.'.jpg');				
+				}
+		}
+		}
+		else{
+			echo'Veuillez rentrer une image';
+		}
 		
 		
 		if($titre&&$description&&$prix){
@@ -33,10 +78,11 @@ if(isset($_GET['action'])){
 				
 		}
 		?>
-		<form action="" method="post">
+		<form action="" method="post" enctype="multipart/form-data">
 		<h3>Titre du Produit :</h3><input type="text" name="titre"/>
 		<h3>Description du Produit :</h3><textarea name="description"></textarea>
-		<h3>Prix du Produit :</h3><input type="text" name="prix"/><br><br>
+		<h3>Prix du Produit :</h3><input type="number" name="prix"/>Euros<br><br>
+		<input type="file" name="img"/><br><br>
 		<input type="submit" name="submit">
 		</form>
 		<?php
@@ -54,14 +100,15 @@ if(isset($_GET['action'])){
 		}
 	
 	}else if ($_GET['action']=='modify'){
-				
-		$id=$_GET['id'];
 		
+		$id=$_GET['id'];
 		$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
 		$select = $pdo->prepare("SELECT * FROM products WHERE id=$id");
 		$select->execute();
 		
 		$data = $select->fetch(PDO::FETCH_OBJ);
+		
+		
 		
 		?>
 				<form action="" method="post">
@@ -78,9 +125,13 @@ if(isset($_GET['action'])){
 		$titre = $_POST['titre'];
 		$description = $_POST['description'];
 		$prix = $_POST['prix'];
+		$id=$_GET['id'];
 		
-		$update = $pdo->prepare('UPDATE products SET titre= "$titre" ,description= "$description" ,prix= "$prix" WHERE id="$id"');
+		$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+		$update = $pdo->prepare("UPDATE products SET titre= '$titre' ,description= '$description' ,prix= '$prix' WHERE id=$id");
 		$update->execute();
+		}
+	
 	
 	
 	}else if($_GET['action']=='delet'){
@@ -99,7 +150,6 @@ if(isset($_GET['action'])){
 }else
 	{header('location: .../index.php');
 	}
-}
 ?>
 
 		
