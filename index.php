@@ -1,7 +1,7 @@
 <?php
 include("securite.php"); include("utilsateur.php");
 require_once('includes/header.php'); require_once('includes/sidebar.php');
-echo'<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
+echo'<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
 require_once('includes/footer.php');
 
 
