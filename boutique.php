@@ -2,11 +2,14 @@
 
 require_once('includes/header.php');
 require_once('includes/sidebar.php');
-include("securite.php"); include("utilsateur.php");
 
-$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
-$select = $pdo->prepare("SELECT * FROM products");
+if(isset($_GET['categorie'])){
+	
+	$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+$categorie = $_GET['categorie'];
+$select = $pdo->prepare("SELECT * FROM products WHERE categorie='$categorie'");
 $select->execute();
+
 
 if(isset($_GET['show'])){
 $products = $_GET['show'];
@@ -59,4 +62,20 @@ $description_finale = wordwrap($description,25,'<br><br>', true);
 	
 	require_once('includes/footer.php');
 	
-	?>
+}else{
+	
+
+$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+$select = $pdo->query('SELECT * FROM categorie');
+
+while ($s= $select->fetch(PDO::FETCH_OBJ)){
+
+?>
+
+<a href="?categorie=<?php echo $s->nom;?>"> <h3><?php echo $s->nom ?></h3> </a>
+
+<?php
+}
+}
+
+?>

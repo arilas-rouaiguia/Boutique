@@ -62,9 +62,11 @@ if(isset($_GET['action'])){
 		
 		
 		if($titre&&$description&&$prix){
+			
+			$categorie =$_POST['categorie'];
 
 			    $pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
-				$stmt = $pdo->prepare("INSERT INTO products(titre, description, prix) VALUES ('$titre','$description','$prix')");
+				$stmt = $pdo->prepare("INSERT INTO products(titre, description, prix, categorie) VALUES ('$titre','$description','$prix','$categorie')");
 				$stmt->execute();
 				
 				if (!$stmt) {
@@ -81,9 +83,28 @@ if(isset($_GET['action'])){
 		<form action="" method="post" enctype="multipart/form-data">
 		<h3>Titre du Produit :</h3><input type="text" name="titre"/>
 		<h3>Description du Produit :</h3><textarea name="description"></textarea>
-		<h3>Prix du Produit :</h3><input type="number" name="prix"/>Euros<br><br>
+		<h3>Prix du Produit :</h3><input type="number" name="prix"/> Euros<br><br>
+		<h3>Image :</h3>
 		<input type="file" name="img"/><br><br>
-		<input type="submit" name="submit">
+		<h3>Categorie :</h3><select name="categorie">
+		
+		<?php 
+		$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+		$select = $pdo->query("SELECT * FROM categorie");
+				
+				while($s = $select->fetch(PDO::FETCH_OBJ)){
+					
+					
+			
+		?>
+		<option><?php echo $s->nom; ?></option>
+		
+		<?php
+				}
+		?>
+		</select><br><br>
+		<input type="submit" name="submit"/>
+		
 		</form>
 		<?php
 	}else if ($_GET['action']=='modifyanddelet'){
@@ -142,6 +163,85 @@ if(isset($_GET['action'])){
 		$select = $pdo->prepare("DELETE FROM products WHERE id=$id");
 		$select->execute();
 	
+	}else if($_GET['action']=='add_category'){
+		if(isset($_POST['submit'])){
+			
+			$nom = $_POST['nom'];
+			
+			if($nom){
+				
+				$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+				$stmt = $pdo->prepare("INSERT INTO categorie(nom) VALUES ('$nom')");
+				$stmt->execute();
+				
+			}else{
+				echo "Veuillez remplir tout les champs.";
+			}
+		}
+		?>
+		<form action="" method="post">
+		<h3>Titre de la Catégorie :</h3><input type="text" name="nom"/><br><br>
+		<input type="submit" name="submit" value="Ajouter"/>
+		
+		
+		<?php
+	}else if($_GET['action']=='modifyanddelet_category'){
+		
+		$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+			$select = $pdo->prepare("SELECT * FROM categorie");
+			$select->execute();
+		
+		while($s=$select->fetch(PDO::FETCH_OBJ)){
+			echo $s->nom;
+			?>
+			<a href="?action=modify_category&amp;id=<?php echo $s->id; ?>"> Modifier</a>
+			<a href="?action=delet_category&amp;id=<?php echo $s->id; ?>"> X</a><br><br>
+			<?php
+		}
+		
+		}else if($_GET['action']=='modify_category'){
+		
+		$id=$_GET['id'];
+		$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+		$select = $pdo->prepare("SELECT * FROM categorie WHERE id=$id");
+		$select->execute();
+		
+		$data = $select->fetch(PDO::FETCH_OBJ);
+		
+		
+		
+		?>
+				<form action="" method="post">
+		<h3>Titre du Produit :</h3><input value="<?php echo $data->nom;?>" name="titre"/>
+		<input type="submit" name="submit" value="Modifier"/>
+		</form>
+		
+		<?php
+		
+		if(isset($_POST['submit'])){
+			
+		$titre = $_POST['titre'];
+
+		
+		$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+		$update = $pdo->prepare("UPDATE categorie SET nom= '$titre' WHERE id=$id");
+		$update->execute();
+		
+			
+		}
+			
+	
+	}else if($_GET['action']=='delet_category'){
+		
+		$pdo = new PDO('mysql:host=localhost;dbname=boutique', 'root', '');
+		
+		$id=$_GET['id'];
+		$delet = $pdo->prepare("DELETE FROM categorie WHERE id=$id");
+		$delet->execute();
+		
+		header('location: admin.php?action=modifyanddelet_category');
+		 
+		
 	}else{
 		
 	Die("une erreur c'est produite.");
@@ -156,4 +256,7 @@ if(isset($_GET['action'])){
 <br>
 <a href="?action=add">Ajouter un Produit</a><br>
 <a href="?action=modifyanddelet">Modifier ou Supprimer un Produit</a><br> 
+
+<a href="?action=add_category">Créer une Catégorie</a>
+<a href="?action=modifyanddelet_category">Modifier ou Supprimer un Catégorie</a><br> <br> 
 
