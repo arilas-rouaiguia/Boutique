@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : jeu. 29 avr. 2021 à 14:46
+-- Généré le : lun. 03 mai 2021 à 11:51
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `categorie` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Déchargement des données de la table `categorie`
@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS `categorie` (
 
 INSERT INTO `categorie` (`id`, `nom`) VALUES
 (1, 'Test'),
-(4, 'Less go');
+(4, 'Less go'),
+(5, 'CatÃ©gorie de plus');
 
 -- --------------------------------------------------------
 
